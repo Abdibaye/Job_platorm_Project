@@ -4,16 +4,18 @@ import Filter from '../components/filter';
 import Pagination from '../components/pagination';
 import React, { useEffect, useState } from 'react';
 import Hero from '../components/hero';
-
+import useStore from '../store/store';
 
 function HomePage() {
-  const [jobs, setJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(3);
   const [totalPosts, settotalPosts] = useState(1);
 
-     const api = `https://joblisting-3hjv.onrender.com/api/jobs?limit=${postPerPage}&pages=${currentPage}`;
-  
+  // Access jobs and setJobs directly from the global store
+  const jobs = useStore((state) => state.jobs);
+  const setJobs = useStore((state) => state.setJobs);
+
+  const api = `https://joblisting-rd8f.onrender.com/api/jobs?limit=${postPerPage}&pages=${currentPage}`;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,27 +30,27 @@ function HomePage() {
     };
 
     fetchData();
-  }, [currentPage, postPerPage]);
+  }, [currentPage, postPerPage, setJobs]); // Added setJobs to dependency array
 
   const pagination = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  }
-
-  
+    if (pageNumber > 0 && pageNumber <= Math.ceil(totalPosts / postPerPage)) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   return (
     <div className='bg-[#F3F3F3]'>
       <Hero />
-      <div className='flex mt-4 justify-between w-[100lvw] h-1/3'>
-        <Filter jobs={jobs} setJobs={setJobs} />
-        <Feed jobs={jobs} setJobs={setJobs} />
-        <Saved jobs={jobs} setJobs={setJobs} />
+      <div className='flex mt-4 justify-between w-[100vw] h-1/3'>
+        {/* No need to pass jobs as props */}
+        <Filter />
+        <Feed />
+        <Saved />
       </div>
       <Pagination 
         pagination={pagination} 
         totalJobs={totalPosts} 
         postPerPage={postPerPage} 
-        jobs={jobs}
       />
     </div>
   );

@@ -3,6 +3,8 @@ import { CiLocationOn } from "react-icons/ci";
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
+import useStore from '../store/store';
+
 
 
 
@@ -12,8 +14,10 @@ function valuetext(value) {
   }    
   
 
-function Filter({jobs,setJobs}) {
+function Filter() {
     const [value, setValue] = React.useState([20, 37]);
+    const jobs = useStore((state) => state.jobs);
+    const setJobs = useStore((state) => state.setJobs);
 
 
   const handleChange = (event, newValue) => {

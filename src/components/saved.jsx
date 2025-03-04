@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { MdCancel } from "react-icons/md";
+import useStore from '../store/store';
 
-function Saved({ jobs = [], setJobs }) {
+
+function Saved() {
     const [savedJobs, setSavedJobs] = useState([]);
 
     
+  const jobs = useStore((state) => state.jobs);
+  const setJobs = useStore((state) => state.setJobs);
+  
     useEffect(() => {
         setSavedJobs(jobs.filter(job => job.isBookMarked));
     }, [jobs]);
